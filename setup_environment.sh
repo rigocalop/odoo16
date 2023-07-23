@@ -1,38 +1,41 @@
 #!/bin/bash
 
-# Actualizar los paquetes del sistema
-sudo apt-get update
-
-# Instalar las dependencias necesarias
-sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common nginx
-
-# Añadir la clave GPG oficial de Docker
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-# Añadir el repositorio de Docker a las fuentes de APT
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
-# Actualizar los paquetes del sistema para incluir los de Docker
-sudo apt-get update
+# Actualizar los paquetes existentes
+sudo apt update -y
 
 # Instalar Docker
-sudo apt-get install -y docker-ce
+sudo apt install -y docker.io
 
-# Descargar la última versión de Docker Compose e instalarla
-sudo curl -L "https://github.com/docker/compose/releases/download/1.28.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+# Instalar Docker Compose
+sudo apt install -y docker-compose
 
-# Crear la red de Docker que Portainer usará para comunicarse con las instancias de Docker
-sudo docker network create portainer_network
+# Instalar Nginx
+sudo apt install -y nginx
 
-# Desplegar Portainer en Docker
-sudo docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce
+# Instalar Certbot (Let's Encrypt)
+sudo apt install -y certbot python3-certbot-nginx
 
-# Agregar el repositorio de Certbot a las fuentes de APT
-sudo add-apt-repository ppa:certbot/certbot -y
+# Instalar PostgreSQL
+sudo apt install -y postgresql postgresql-contrib
 
-# Actualizar los paquetes del sistema para incluir los de Certbot
+# Instalar Portainer
+docker volume create portainer_data
+docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+
+# Instalar net-tools
+sudo apt install -y net-tools
+
+# Añadir la clave de Microsoft
+wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+
+# Instalar .NET SDK
 sudo apt-get update
+sudo apt-get install -y apt-transport-https
+sudo apt-get update
+sudo apt-get install -y dotnet-sdk-6.0
 
-# Instalar Certbot
-sudo apt-get install -y certbot python-certbot-nginx
+# Limpiar
+sudo apt autoremove
+sudo apt autoclean
+rm packages-microsoft-prod.deb
