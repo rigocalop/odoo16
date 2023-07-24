@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Pasar las variables como argumentos al script
+POSTGRES_USER=$1
+POSTGRES_PASSWORD=$2
+POSTGRES_PORT=$3
+ADMINER_PORT=$4
+PORTAINER_PORT=$5
+
 # Actualiza la lista de paquetes
 sudo yum update -y
 
@@ -28,7 +35,15 @@ sudo yum install -y nginx
 sudo systemctl enable nginx
 sudo systemctl start nginx
 
+# Corre Portainer como un contenedor Docker
+sudo docker run -d -p $PORTAINER_PORT:9000 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce
+
+# Corre PostgreSQL y Adminer como contenedores Docker
+sudo docker run --name some-postgres -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -d -p $POSTGRES_PORT:5432 postgres
+sudo docker run --link some-postgres:db -p $ADMINER_PORT:8080 adminer
+
 # Verificación de la instalación
 docker --version
 docker-compose --version
 nginx -v
+docker ps
