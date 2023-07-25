@@ -21,5 +21,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SERVER_SSH_PORT }}
         script: |
-          cd /path/to/your/repository
-          git pull origin master
+          ls -a
