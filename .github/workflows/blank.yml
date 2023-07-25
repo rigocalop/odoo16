@@ -1,0 +1,23 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Copy repo contents to Ubuntu Server
+      uses: appleboy/scp-action@master
+      with:
+        host: 31.220.17.110
+        username: root
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCW9Kxvj7+lvbpm5egUPfQwYSABMcS6Oa+ZuEBTa8DyxXU4sSszfPHBLQ+4wRRsAgR/Ubk2gyup4k6t/nhRrGUlZgZzgJogJHlV7M7Cw4UfvONOCUhLebZ/Qk73uXUf32zSP/rxfZum4elKVOYZwzYPNFR2vKzPfrstbVzwuvzQOVaveqYWRp2gGZk0OS4YiAr0AiF++Wmw8g2tRz3BR4IHdwowLl1r/s+SgVY59fGuqPsJk25i8A36QwZ/RwgWySWGTse25gezHWXyVXSFWk0/16PizjQW66GLpAElXBUJwb/d+Rjim4MjAf4SHASMzsWtcDtDRHEYnD7rH3CesMCKIF/1AS9o/zhLN+vbwhTxDpHob0ddRn0vhSem6FKUcp+6xboFoc6t7cY19O12ZvF/2AS4TaINrBwlWprYIZDZ3a07J6pMxNb/gCuGZd4EDUhy8WD5IDJefZWb3NY12MUtBOdgZnCx98QeA9hAHT6D8Naekxr2ORniSY+MXhd12aGz5dLj6Y/4XqbHElLVz6XvV+ByWN0k935r6y1+gl1YfTso2WNA0r2M0S4RdG3c/B0pjdU5/DB7Wp1HOlu7/Fd/hN2DxWuhmi/0NHM0HlOQUj5ZUyZHuxz5yDN8n3bxJWyeftD5fLxa50na7xPs5x/+cPVkoMLl2ifZm8ohnJC/nQ== rigocl@hotmail.com
+        source: "."
+        
